@@ -41,7 +41,7 @@ public class OpenApiConfig {
                                 .email("1223100413@utng.edu.mx"))
                         .license(new License().name("Uso academico - UTNG")))
                 .servers(List.of(new Server()
-                        .url("http://localhost:8080")
-                        .description("Entorno local de desarrollo")));
+                        .url("https://administraci-n-de-usuarios.onrender.com")
+                        .description("Entorno local de produccion")));
     }
 }
