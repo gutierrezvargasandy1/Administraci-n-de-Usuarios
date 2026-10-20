@@ -1,32 +1,32 @@
-# etapa 1: compilacion con java 21 y maven wrapper
-from eclipse-temurin:21-jdk-jammy as builder
-workdir /app
+# Etapa 1: Compilación con Java 21 y Maven Wrapper
+FROM eclipse-temurin:21-jdk-jammy AS builder
+WORKDIR /app
 
-# copiar archivos de configuracion de maven primero para aprovechar la cache de capas
-copy .mvn/ .mvn/
-copy mvnw pom.xml ./
+# Copiar archivos de configuración de Maven (sin la carpeta .mvn si no existe)
+COPY mvnw pom.xml ./
+COPY .mvn/ .mvn/ || true
 
-# dar permisos de ejecucion al wrapper
-run chmod +x mvnw
+# Dar permisos de ejecución al wrapper
+RUN chmod +x mvnw
 
-# descargar dependencias previamente
-run ./mvnw dependency:go-offline -b
+# Descargar dependencias previamente
+RUN ./mvnw dependency:go-offline -B
 
-# copiar el código fuente de la aplicacion
-copy src ./src
+# Copiar el código fuente de la aplicación
+COPY src ./src
 
-# compilar y generar el jar omitiendo los tests en el build
-run ./mvnw clean package -Dskiptests
+# Compilar y generar el jar omitiendo los tests en el build
+RUN ./mvnw clean package -DskipTests
 
-# etapa 2: imagen ligera de ejecucion con jre 21
-from eclipse-temurin:21-jre-jammy
-workdir /app
+# Etapa 2: Imagen ligera de ejecución con JRE 21
+FROM eclipse-temurin:21-jre-jammy
+WORKDIR /app
 
-# copiar el jar generado desde la etapa de compilacion
-copy --from=builder /app/target/administracion-usuarios-api-1.0.0.jar app.jar
+# Copiar el jar generado desde la etapa de compilación
+COPY --from=builder /app/target/administracion-usuarios-api-1.0.0.jar app.jar
 
-# exponer el puerto por defecto de spring boot
-expose 8080
+# Exponer el puerto por defecto de Spring Boot
+EXPOSE 8080
 
-# comando para iniciar la aplicacion
-entrypoint ["java", "-jar", "app.jar"]
+# Comando para iniciar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar"]
