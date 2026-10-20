@@ -1,0 +1,13 @@
+target/
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+pruebas/evidencia-pruebas.txt
+*.log
+.DS_Store

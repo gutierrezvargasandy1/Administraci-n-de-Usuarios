@@ -1,0 +1,23 @@
+# Perfil exclusivo para las pruebas automatizadas.
+# Utiliza una base de datos en memoria para no depender de PostgreSQL durante
+# la ejecucion de mvn test. El codigo de la aplicacion no cambia.
+spring:
+  datasource:
+    url: jdbc:h2:mem:pruebas_usuarios;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+app:
+  paginacion:
+    tamanio-por-defecto: 10
+    tamanio-maximo: 50
+
+logging:
+  level:
+    root: WARN
+    com.utng.usuarios: INFO
